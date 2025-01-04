@@ -1,23 +1,24 @@
 #!/usr/bin/python3
+'''
+Methode to determine if all the boxes can be opened
+'''
+
 
 def canUnlockAll(boxes):
-    """
-    Args:
-        boxes (list of list): List of boxes, each containing a list of keys.
-    Returns:
-        bool: True if all boxes can be unlocked, False otherwise.
-    """
+    '''Function to inlock boxes'''
     unlocked = set([0])
     keys = set(boxes[0])
 
-    # unlocking while there are keys available
+    # Keep checking until no new keys are added
     while keys:
+        # Get a key to check
         current_key = keys.pop()
 
-        # Only process valid keys that lead to locked boxes
         if current_key < len(boxes) and current_key not in unlocked:
-            # Unlock the box and add its keys
+            # Unlock the box
             unlocked.add(current_key)
+            # Add keys from this box to our keys set
             keys.update(boxes[current_key])
 
+    # If we've unlocked all the boxes
     return len(unlocked) == len(boxes)
