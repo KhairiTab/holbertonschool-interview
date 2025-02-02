@@ -60,24 +60,3 @@ void sandpiles_sum(int grid1[3][3], int grid2[3][3]) {
         topple(grid1);
     }
 }
-
-// Example usage
-int main() {
-    int grid1[3][3] = {
-        {1, 2, 3},
-        {2, 3, 1},
-        {3, 1, 2}
-    };
-    int grid2[3][3] = {
-        {2, 1, 3},
-        {1, 3, 2},
-        {3, 2, 1}
-    };
-
-    sandpiles_sum(grid1, grid2);
-
-    printf("Final stable grid:\n");
-    print_grid(grid1);
-
-    return 0;
-}
