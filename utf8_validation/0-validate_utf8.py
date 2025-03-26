@@ -7,7 +7,7 @@ def validUTF8(data):
     Determines if a dataset represents valid UTF-8 encoding.
 
     Args:
-        data (list): A list of integers representing bytes (0 <= integer <= 255).
+    data (list): A list of integers representing bytes (0 <= integer <= 255).
 
     Returns:
         bool: True if valid UTF-8, False otherwise.
