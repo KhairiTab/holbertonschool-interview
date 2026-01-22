@@ -1,51 +1,57 @@
 #!/usr/bin/python3
 """
-Reads stdin line by line and computes metrics.
+Task - Script that reads stdin line by line and computes metrics
 """
 import sys
-import signal
-
-STATUS_CODES = [200, 301, 400, 401, 403, 404, 405, 500]
-
-total_size = 0
-line_count = 0
-status_count = {code: 0 for code in STATUS_CODES}
 
 
-def print_stats():
-    """Print statistics"""
-    print("File size: {}".format(total_size))
-    for code in sorted(status_count.keys()):
-        if status_count[code] > 0:
-            print("{}: {}".format(code, status_count[code]))
+def parse_line(line, status_codes):
+    """Read, parse and grab data"""
+    try:
+        parsed_line = line.split()
+        status_code = parsed_line[-2]
+
+        if status_code in status_codes:
+            status_codes[status_code] += 1
+
+        return int(parsed_line[-1])
+    except (IndexError, ValueError):
+        return 0
 
 
-def signal_handler(sig, frame):
-    """Handle CTRL + C"""
-    print_stats()
-    sys.exit(0)
-
-
-signal.signal(signal.SIGINT, signal_handler)
+def print_stats(file_size, status_codes):
+    """Print stats in ascending order"""
+    print("File size: {}".format(file_size))
+    for key in sorted(status_codes.keys()):
+        if status_codes[key] > 0:
+            print("{}: {}".format(key, status_codes[key]))
 
 
 if __name__ == "__main__":
-    for line in sys.stdin:
-        try:
-            parts = line.split()
+    status_codes = {
+        "200": 0,
+        "301": 0,
+        "400": 0,
+        "401": 0,
+        "403": 0,
+        "404": 0,
+        "405": 0,
+        "500": 0
+    }
 
-            status = int(parts[-2])
-            size = int(parts[-1])
+    count = 0
+    file_size = 0
 
-            total_size += size
+    try:
+        for line in sys.stdin:
+            file_size += parse_line(line, status_codes)
+            count += 1
 
-            if status in status_count:
-                status_count[status] += 1
+            if count % 10 == 0:
+                print_stats(file_size, status_codes)
 
-            line_count += 1
+    except KeyboardInterrupt:
+        print_stats(file_size, status_codes)
+        raise
 
-            if line_count % 10 == 0:
-                print_stats()
-
-        except (IndexError, ValueError):
-            continue
+    print_stats(file_size, status_codes)
